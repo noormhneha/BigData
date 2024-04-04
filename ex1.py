@@ -19,16 +19,17 @@ def print_to_file(query, params, output_file, question):
         f.write("=" * 55 + f"\nResults for question {question}:\n\n")
         f.write(f"The query:\n{query}\n")
         f.write(f"Num of rows: {len(rows)}\n\n")
-        f.write("The results:\n")
-        f.write(f"{header}\n")
-        for i, row in enumerate(rows[:5]):
-            f.write(f"{i} {row}\n")  # Writing each row as a list
-
-        # Print the last 5 rows
-        if len(rows) > 5:
+        if len(rows) > 0:
+            f.write("The results:\n")
             f.write(f"{header}\n")
-            for i, row in enumerate(rows[-5:], start=len(rows) - 5):
+            for i, row in enumerate(rows[:5]):
                 f.write(f"{i} {row}\n")  # Writing each row as a list
+
+            # Print the last 5 rows
+            if len(rows) > 5:
+                f.write(f"{header}\n")
+                for i, row in enumerate(rows[-5:], start=len(rows) - 5):
+                    f.write(f"{i} {row}\n")  # Writing each row as a list
 
         f.write("\n")
 
@@ -87,10 +88,26 @@ query = """
 """
 print_to_file(query, (), output_file, 6)
 
-# Q6: Show all cities with population between 150k to 170k
+# Q7: Show all cities with population between 150k to 170k
 query = """
     SELECT * 
     FROM City
     WHERE Population BETWEEN 150000 AND 170000
 """
 print_to_file(query, (), output_file, 7)
+
+# Q8: countries indepYear in 1970 or 1980 or 1990
+query = """
+    SELECT * 
+    FROM Country
+    WHERE IndepYear IN (1970, 1980, 1990)
+"""
+print_to_file(query, (), output_file, 8)
+
+# Q9: countries indepYear in 1980 and 1990
+query = """
+	SELECT * 
+	FROM Country
+	WHERE IndepYear  = 1980 AND IndepYear = 1990
+"""
+print_to_file(query, (), output_file, 8)
