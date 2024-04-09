@@ -1,34 +1,50 @@
 import sqlite3
 
-def print_to_file(query, output_file, question):
+""" install this lib first pls : 
+{ pip install tabulate } """
+
+from tabulate import tabulate
+
+
+def execute_query_and_write_results(query, output_file, question):
     # Connect to the SQLite database
     conn = sqlite3.connect("World.db3")
-
     cursor = conn.cursor()
+
+    # Execute the query
     cursor.execute(query)
     rows = cursor.fetchall()
 
     # Fetch column names
-    cursor.execute(query)
     column_names = [description[0] for description in cursor.description]
-    header = "\t" + "\t".join(column_names)  # Use tabs as separators
 
-    # Write results to the output file
+    # Extract the first 5 rows
+    first_rows = rows[:5]
+
+    # Extract the last 5 rows if available
+    if len(rows) > 5:
+        last_rows = rows[-5:]
+    else:
+        last_rows = []
+
+    # Convert rows to a list of lists
+    first_data = [[i] + list(row) for i, row in enumerate(first_rows)]
+    last_data = [[len(rows) + i - 5] + list(row) for i, row in enumerate(last_rows)]
+
+    # Write results to the output file using tabulate
     with open(output_file, 'a') as f:
-        f.write("=" * 55 + f"\nResults for question {question}:\n\n")
+        f.write("=" * 55 + f"\nQuestion: {question}\n")
         f.write(f"The query:\n{query}\n")
-        f.write(f"Num of rows: {len(rows)}\n\n")
-        if len(rows) > 0:
-            f.write("The results:\n")
-            f.write(f"{header}\n")
-            for i, row in enumerate(rows[:5]):
-                f.write(f"{i+1}\t{'\t'.join(str(x) for x in row)}\n")  # Writing each row as a list with tabs as separators
+        f.write(f"Num of rows: {len(rows)}\n")
 
-            # Print the last 5 rows
-            if len(rows) > 5:
-                f.write(f"\n{header}\n")
-                for i, row in enumerate(rows[-5:], start=len(rows) - 4):
-                    f.write(f"{i}\t{'\t'.join(str(x) for x in row)}\n")  # Writing each row as a list with tabs as separators
+        f.write("The results:\n")
+        if len(rows) > 0:  # first 5 rows
+            table = tabulate(first_data, headers=column_names, tablefmt="plain")
+            f.write(table + "\n")
+
+            if last_data:  # last 5 rows
+                table = tabulate(last_data, headers=column_names, tablefmt="plain")
+                f.write(table + "\n")
 
         f.write("\n")
 
@@ -37,256 +53,235 @@ def print_to_file(query, output_file, question):
     conn.close()
 
 
-output_file = 'query_results.txt'  # output file
+def main():
+    output_file = 'query_results.txt'  # Output file
 
-# Q1: all the cities
-query = """
-    SELECT * 
-    FROM  City
-"""
+    # Define queries and corresponding questions
+    queries = [
+        # Question 1: All the cities
+        ("""
+SELECT * 
+FROM City
+""", 1),
 
-print_to_file(query, output_file, 1)
+        # Question 2: All the countries
+        ("""
+SELECT * 
+FROM Country
+""", 2),
 
-# Q2: all the countries
-query = """
-    SELECT * 
-    FROM Country
-"""
-print_to_file(query, output_file, 2)
+        # Question 3: Display the cities in the country with code NLD
+        ("""
+SELECT * 
+FROM City
+WHERE CountryCode = "NLD"
+""", 3),
 
-# Q3: display the cities in the country whose code NLD
-query = """
-    SELECT * 
-    FROM City
-	WHERE CountryCode = "NLD"
-"""
+        # Question 4: Show the countries with codes LBR, IOT, or TKL
+        ("""
+SELECT * 
+FROM Country
+WHERE Code  IN ('LBR', 'IOT', 'TKL')
+""", 4),
 
-print_to_file(query, output_file, 3)
+        # Question 5: Show all cities with a population above 4 million
+        ("""
+SELECT * 
+FROM City
+WHERE Population > 4000000
+""", 5),
 
-# Q4: Show the countries whose code is LBR or IOT or TKL
-query = """
-    SELECT * 
-    FROM Country
-	WHERE Code  IN ('LBR', 'IOT', 'TKL')
-"""
-print_to_file(query, output_file, 4)
+        # Q6: Show all cities with population above 3 million in BRA
+        ("""
+SELECT * 
+FROM City
+WHERE Population > 3000000 AND CountryCode = 'BRA'
+""", 6),
 
-# Q5: Show all cities with population above 4 million
-query = """
-    SELECT * 
-    FROM City
-    WHERE Population > 4000000
-"""
-print_to_file(query, output_file, 5)
+        # Q7: Show all cities with population between 150k to 170k
+        ("""
+SELECT * 
+FROM City
+WHERE Population BETWEEN 150000 AND 170000
+""", 7),
 
-# Q6: Show all cities with population above 3 million in BRA
-query = """
-    SELECT * 
-    FROM City
-    WHERE Population > 3000000 AND CountryCode = 'BRA'
-"""
-print_to_file(query, output_file, 6)
+        # Q8: countries indepYear in 1970 or 1980 or 1990
+        ("""
+SELECT * 
+FROM Country
+WHERE IndepYear IN (1970, 1980, 1990)
+""", 8),
 
-# Q7: Show all cities with population between 150k to 170k
-query = """
-    SELECT * 
-    FROM City
-    WHERE Population BETWEEN 150000 AND 170000
-"""
-print_to_file(query, output_file, 7)
+        # Q9: countries indepYear in 1980 and 1990
+        ("""
+SELECT * 
+FROM Country
+WHERE IndepYear  = 1980 AND IndepYear = 1990
+""", 9),
 
-# Q8: countries indepYear in 1970 or 1980 or 1990
-query = """
-    SELECT * 
-    FROM Country
-    WHERE IndepYear IN (1970, 1980, 1990)
-"""
-print_to_file(query, output_file, 8)
+        # Q10:
+        ("""
+SELECT *
+FROM Country
+WHERE IndepYear BETWEEN 1980 AND 1990
+""", 10),
 
-# Q9: countries indepYear in 1980 and 1990
-query = """
-	SELECT * 
-	FROM Country
-	WHERE IndepYear  = 1980 AND IndepYear = 1990
-"""
-print_to_file(query, output_file, 9)
+        # Q11: In africa and indep at 1964
+        ("""
+SELECT *
+FROM Country
+WHERE Continent = 'Africa' AND IndepYear = 1964
+""", 11),
 
-# Q10:
-query = """
-    SELECT *
-    FROM Country
-    WHERE IndepYear BETWEEN 1980 AND 1990
-"""
-print_to_file(query, output_file, 10)
+        # Q12: countries in africa or indep at 1964
+        ("""
+SELECT *
+FROM Country
+WHERE Continent = 'Africa' OR IndepYear = 1964
+""", 12),
 
-# Q11: In africa and indep at 1964
-query = """
-    SELECT *
-    FROM Country
-    WHERE Continent = 'Africa' AND IndepYear = 1964
-"""
-print_to_file(query, output_file, 11)
+        # Q13: countries in asia
+        ("""
+SELECT *
+FROM Country
+WHERE Continent = 'Asia'
+""", 13),
 
-# Q12: countries in africa or indep at 1964
-query = """
-    SELECT *
-    FROM Country
-    WHERE Continent = 'Africa' OR IndepYear = 1964
-"""
-print_to_file(query, output_file, 12)
+        # Q14: countries not in asia
+        ("""
+SELECT *
+FROM Country
+WHERE Continent != 'Asia'
+""", 14),
 
-# Q13: countries in asia
-query = """
-    SELECT *
-    FROM Country
-    WHERE Continent = 'Asia'
-"""
-print_to_file(query, output_file, 13)
+        # Q15: countries not in asia or europe
+        ("""
+SELECT *
+FROM Country
+WHERE Continent NOT IN ('Asia', 'Europe')
+""", 15),
 
-# Q14: countries not in asia
-query = """
-    SELECT *
-    FROM Country
-    WHERE Continent != 'Asia'
-"""
-print_to_file(query, output_file, 14)
+        # Q16: Cities start with "H"
+        ("""
+SELECT *
+FROM City
+WHERE Name LIKE 'H%'
+""", 16),
 
-# Q15: countries not in asia or europe
-query = """
-    SELECT *
-    FROM Country
-    WHERE Continent NOT IN ('Asia', 'Europe')
-"""
-print_to_file(query, output_file, 15)
+        # Q17: Cities does not includes an 'e'
+        ("""
+SELECT *
+FROM City
+WHERE Name NOT LIKE '%e%'
+""", 17),
 
-# Q16: Cities start with "H"
-query = """
-    SELECT *
-    FROM City
-    WHERE Name LIKE 'H%'
-"""
-print_to_file(query, output_file, 16)
+        # Q18: Languages
+        ("""
+SELECT DISTINCT  Language
+FROM CountryLanguage
+ORDER BY Language
+""", 18),
 
-# Q17: Cities does not includes an 'e'
-query = """
-    SELECT *
-    FROM City
-    WHERE Name NOT LIKE '%e%'
-"""
-print_to_file(query, output_file, 17)
+        # Q19: Countries sorted By indep year and name
+        ("""
+SELECT *
+FROM Country
+ORDER BY IndepYear, Name
+""", 19),
 
-# Q18: Languages
-query = """
-    SELECT DISTINCT  Language
-    FROM CountryLanguage
-	ORDER BY Language
-"""
-print_to_file(query, output_file, 18)
+        # Q20: Sort by LifeExpectancy DESC
+        ("""
+SELECT *
+FROM Country
+ORDER BY LifeExpectancy DESC
+""", 20),
 
-# Q19: Countries sorted By indep year and name
-query = """
-    SELECT *
-    FROM Country
-	ORDER BY IndepYear, Name
-"""
-print_to_file(query, output_file, 19)
+        # Q21: 10 Highest GNP
+        ("""
+SELECT *
+FROM Country
+ORDER BY GNP DESC
+LIMIT 10
+""", 21),
 
-# Q20: Sort by LifeExpectancy DESC
-query = """
-    SELECT *
-    FROM Country
-	ORDER BY LifeExpectancy DESC
-"""
-print_to_file(query, output_file, 20)
+        # Q22: 10-20 Highest GNP
+        ("""
+SELECT *
+FROM Country
+ORDER BY GNP DESC
+LIMIT 10,10
+""", 22),
 
-# Q21: 10 Highest GNP
-query = """
-    SELECT *
-    FROM Country
-	ORDER BY GNP DESC
-	LIMIT 10
-"""
-print_to_file(query, output_file, 21)
+        # Q23: Lowest 10 GNP
+        ("""
+SELECT *
+FROM Country
+ORDER BY GNP ASC
+LIMIT 10
+""", 23),
 
-# Q22: 10-20 Highest GNP
-query = """
-    SELECT *
-    FROM Country
-	ORDER BY GNP DESC
-	LIMIT 10,10
-"""
-print_to_file(query, output_file, 22)
+        # Q24: Sort countries by name and in witch region it is
+        ("""
+SELECT Name, Continent || ' (' || Region || ')'
+FROM Country
+ORDER BY 1
+""", 24),
 
-# Q23: Lowest 10 GNP
-query = """
-    SELECT *
-    FROM Country
-	ORDER BY GNP ASC
-	LIMIT 10
-"""
-print_to_file(query, output_file, 23)
+        # Q25: Countries start with Z - swap the population to m
+        ("""
+SELECT Name, Population / 1000000.0  Population 
+FROM Country
+WHERE Name LIKE 'Z%'
+""", 25),
 
-# Q24: Sort countries by name and in witch region it is
-query = """
-    SELECT Name, Continent || ' (' || Region || ')'
-    FROM Country
-	ORDER BY 1
-"""
-print_to_file(query, output_file, 24)
+        # Q26: Countries Gnp > 2*GNPOld
+        ("""
+SELECT *
+FROM Country
+WHERE GNP > 2 * GNPOld
+""", 26),
 
-# Q25: Countries start with Z - swap the population to m
-query = """
-    SELECT Name, Population / 1000000.0  Population 
-    FROM Country
-    WHERE Name LIKE 'Z%'
-"""
-print_to_file(query, output_file, 25)
+        # Q27: Population / SurfaceArea Order
+        ("""
+SELECT Name,  Population / SurfaceArea
+FROM Country
+ORDER BY 2 DESC
+""", 27),
 
-# Q26: Countries Gnp > 2*GNPOld
-query = """
-    SELECT *
-    FROM Country
-    WHERE GNP > 2 * GNPOld
-"""
-print_to_file(query, output_file, 26)
+        # Q28: Population / SurfaceArea that > 2000, Order by code
+        ("""
+SELECT Name,  Population / SurfaceArea
+FROM Country
+WHERE Population / SurfaceArea > 2000
+ORDER BY Code DESC
+""", 28),
 
-# Q27: Population / SurfaceArea Order
-query = """
-    SELECT Name,  Population / SurfaceArea
-    FROM Country
-    ORDER BY 2 DESC
-"""
-print_to_file(query, output_file, 27)
+        # Q29: sort by continent and surface area
+        ("""
+SELECT *
+FROM Country
+ORDER BY Continent , SurfaceArea DESC
+""", 29),
 
-# Q28: Population / SurfaceArea that > 2000, Order by code
-query = """
-    SELECT Name,  Population / SurfaceArea
-    FROM Country
-    WHERE Population / SurfaceArea > 2000
-    ORDER BY Code DESC
-"""
-print_to_file(query, output_file, 28)
+        # Q30: Countries ends with n and less than 10 chars
+        ("""
+SELECT *``
+FROM Country
+WHERE Name LIKE '%N' AND LENGTH(Name) <= 10;
+""", 30),
 
-# Q29: sort by continent and surface area
-query = """
-    SELECT *
-    FROM Country
-    ORDER BY Continent , SurfaceArea DESC
-"""
-print_to_file(query, output_file, 29)
+        # Q31: All the countries with indep NULL
+        ("""
+SELECT *
+FROM Country
+WHERE IndepYear IS NULL
+""", 31)
+    ]
 
-# Q30: Countries ends with n and less than 10 chars
-query = """
-    SELECT *
-    FROM Country
-    WHERE Name LIKE '%N' AND LENGTH(Name) <= 10;
-"""
-print_to_file(query, output_file, 30)
+    # Execute each query and write results to the output file
+    for query, question in queries:
+        execute_query_and_write_results(query, output_file, question)
 
-# Q31: All the countries with indep NULL
-query = """
-    SELECT *
-    FROM Country
-    WHERE IndepYear IS NULL
-"""
-print_to_file(query, output_file, 31)
+
+if __name__ == "__main__":
+    main()
