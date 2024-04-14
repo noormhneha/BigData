@@ -265,7 +265,7 @@ ORDER BY Continent , SurfaceArea DESC
 
         # Q30: Countries ends with n and less than 10 chars
         ("""
-SELECT *``
+SELECT *
 FROM Country
 WHERE Name LIKE '%N' AND LENGTH(Name) <= 10;
 """, 30),
