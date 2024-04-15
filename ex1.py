@@ -263,7 +263,7 @@ FROM Country
 ORDER BY Continent , SurfaceArea DESC
 """, 29),
 
-        # Q30: Countries ends with n and less than 10 chars
+# Q30: Countries ends with n and less than 10 chars
         ("""
 SELECT *
 FROM Country
