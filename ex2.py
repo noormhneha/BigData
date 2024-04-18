@@ -56,21 +56,133 @@ def main():
     output_file = 'query_results.txt'  # Output file
     # Define queries and corresponding questions
     queries = [
+        # Question 1: How many countries in the table
         ("""
-
+SELECT COUNT(*) 
+FROM Country
 """, 1),
-        ("""
-        
-""", 2),
-        ("""
 
-""", 3),
-        (""""
-        
-""", 4),
+        # Question 2: How many countries in the table with LifeExpectancy
         ("""
-        
-""", 5)
+SELECT COUNT(*)
+FROM Country
+WHERE LifeExpectancy 
+IS NOT NULL
+""", 2),
+
+        # Question 3: How many continent in the table
+        ("""
+SELECT COUNT(DISTINCT Continent)
+FROM Country
+""", 3),
+
+        # Question 4: The last IndepYear
+        ("""
+SELECT MAX(IndepYear)
+FROM Country
+""", 4),
+
+        # Question 5: The avg LifeExpectancy
+        ("""
+SELECT AVG(LifeExpectancy)
+FROM Country
+""", 5),
+
+        # Question 6: The avg LifeExpectancy in countries with surface area above 1m
+        ("""
+SELECT AVG(LifeExpectancy)
+FROM Country
+WHERE SurfaceArea > 1000000
+""", 6),
+
+        # Question 7a: Name of the country with the largest area
+        ("""
+SELECT Name
+FROM Country
+WHERE SurfaceArea = 
+	(SELECT MAX(SurfaceArea) 
+	FROM Country)        
+""", 7.1),
+        # Question 7b: Name of the country with the largest area second way [bonus]
+        ("""
+SELECT Name
+FROM Country
+ORDER BY SurfaceArea DESC
+LIMIT 1         
+""", 7.2),
+
+        # Question 8: Name of the country with the smallest area
+        ("""
+SELECT Name
+FROM Country
+WHERE SurfaceArea IN 
+    (SELECT MIN(SurfaceArea) 
+    FROM Country)        
+""", 8),
+
+        # Question 9: All the countries in the same region orders by population
+        ("""
+SELECT Population, Name
+FROM Country
+WHERE Region IN 
+    (SELECT Region 
+     FROM Country) 
+ ORDER BY Population DESC
+""", 9),
+
+        # Question 10: The first 10 countries with population under the avg
+        ("""
+SELECT Name
+FROM Country
+WHERE Population < 
+    (SELECT AVG(Population) 
+    FROM Country) 
+ORDER BY Population DESC
+LIMIT 10
+""", 10),
+
+        # Question 11: The largest GNP and the smallest one. [same row]
+        ("""
+SELECT MAX(GNP), MIN(GNP)
+FROM Country
+WHERE GNP > 0
+""", 11),
+
+        # Question 12: The largest GNP and the smallest one. [table]
+        ("""
+SELECT 'max_gdb' AS category, MAX(GNP) AS gdp_value
+FROM Country
+UNION
+
+SELECT 'min_gdb' AS category, MIN(GNP) AS gdp_value
+FROM Country
+WHERE GNP > 0
+""", 12),
+
+        # Question 13: All the countries that have a population larger 5 times from the avg in the same region
+        ("""
+SELECT Name
+FROM Country AS t1
+WHERE Population > 
+   (SELECT 5 * AVG(Population)
+	FROM Country AS t2
+	WHERE t1.Region = t2.Region)
+""", 13),
+
+        # Question 14: Num of the citizens in Israel and how much it is from the continent
+        ("""
+SELECT 
+    Population,
+    (Population * 100.0 / TotalPopulation) AS Percentage
+FROM Country
+JOIN 
+    (SELECT SUM(Population) AS TotalPopulation 
+	FROM Country 
+	WHERE Continent = 'Asia')
+WHERE Name = 'Israel'
+""", 14)
+
+
     ]
 
     # Execute each query and write results to the output file
