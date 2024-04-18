@@ -180,9 +180,135 @@ JOIN
 	FROM Country 
 	WHERE Continent = 'Asia')
 WHERE Name = 'Israel'
-""", 14)
+""", 14),
 
+        # Question 15: The cities in countries that indep before BC
+        #              ordered by country name, region, city name
+        ("""
+SELECT city.Name
+FROM City
+JOIN Country 
+ON city.CountryCode = Code 
+WHERE IndepYear < 0
+ORDER BY Country.Name, Region, city.Name
+""", 15),
 
+        # Question 16: All the spoken languages in Europe
+        ("""
+SELECT DISTINCT Language
+FROM CountryLanguage
+JOIN Country 
+ON CountryLanguage.CountryCode = Code 
+WHERE Continent = 'Europe'
+""", 16),
+
+        # Question 17: All the spoken lang both in Asia and Europe
+        ("""
+SELECT DISTINCT Language
+FROM CountryLanguage
+WHERE CountryCode IN (
+    SELECT CountryCode
+    FROM CountryLanguage 
+    JOIN Country 
+	ON CountryLanguage.CountryCode = Code
+	AND Continent = 'Europe'
+    WHERE Language IN (
+        SELECT Language
+        FROM CountryLanguage 
+        JOIN Country 
+		ON CountryLanguage.CountryCode = Code 
+		AND Continent = 'Asia')
+    )
+""", 17),
+
+        # Question 18a: All the spoken lang both Antarctica and Oceania
+        ("""
+SELECT DISTINCT Language
+FROM CountryLanguage 
+JOIN Country ON CountryLanguage.CountryCode = Code
+WHERE Continent = 'Antarctica'
+
+UNION
+
+SELECT DISTINCT Language
+FROM CountryLanguage
+JOIN Country ON CountryLanguage.CountryCode =Code
+WHERE Continent = 'Oceania'
+""", 18.1),
+        # Question 18b: All the spoken lang both Antarctica and Oceania [bonus]
+        ("""
+SELECT DISTINCT Language
+FROM CountryLanguage
+JOIN Country ON CountryCode = Code
+WHERE Continent = 'Antarctica' OR Continent = 'Oceania'
+""", 18.2),
+
+        # Question 19a: All the languages that not spoken in Europe
+        ("""
+SELECT DISTINCT Language
+FROM CountryLanguage 
+JOIN Country 
+ON CountryLanguage.CountryCode = Code
+WHERE Continent != 'Europe'
+AND Language NOT IN 
+	(SELECT DISTINCT Language
+    FROM CountryLanguage 
+    JOIN Country 
+	ON CountryLanguage.CountryCode = Code
+    WHERE Continent = 'Europe')
+""", 19.1),
+        # Question 19b: All the languages that not spoken in Europe [bonus]
+        ("""
+SELECT DISTINCT Language
+FROM CountryLanguage 
+JOIN Country 
+ON CountryCode = Code
+WHERE Continent != 'Europe'
+
+EXCEPT
+
+SELECT DISTINCT Language
+FROM CountryLanguage 
+JOIN Country 
+ON CountryCode = Code
+WHERE Continent = 'Europe';
+""", 19.2),
+
+        # Question 20: Capitals
+        ("""
+SELECT Country.Name AS Country, City.Name AS Capital
+FROM Country
+JOIN City
+ON Country.Capital = City.ID
+""", 20),
+
+        # Question 21: cities with population > 10% of the country
+        ("""
+SELECT City.Name AS CityName, City.Population, Country.Name AS CountryName, Country.Population
+FROM City
+JOIN Country 
+ON City.CountryCode = Code
+WHERE City.Population > (0.1 * Country.Population);       
+""", 21),
+
+        # Question 22: the fourth country by area
+        ("""
+SELECT Name, SurfaceArea
+FROM Country
+ORDER BY SurfaceArea DESC
+LIMIT 1 OFFSET 3
+""", 22),
+
+        # Question 23: LifeExpectancy [Ranges]
+        ("""
+SELECT Name AS CountryName, LifeExpectancy,
+    CASE 
+        WHEN LifeExpectancy <= 40 THEN 'LOW'
+        WHEN LifeExpectancy <= 70 THEN 'MED'
+        WHEN LifeExpectancy <= 100 THEN 'HIGH'
+    END AS LifeExpectancyRange
+FROM  Country       
+""", 23)
     ]
 
     # Execute each query and write results to the output file
