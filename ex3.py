@@ -209,156 +209,215 @@ AND NOT EXISTS (
 );
 """, 12),
 
-        # Question 13: All the countries that have a population larger 5 times from the avg in the same region
+        # Question 13: Spoken languages in 2 countries or more
         ("""
-SELECT Name
-FROM Country AS t1
-WHERE Population > 
-   (SELECT 5 * AVG(Population)
-	FROM Country AS t2
-	WHERE t1.Region = t2.Region)
+SELECT Language
+FROM CountryLanguage
+GROUP BY Language
+HAVING COUNT(DISTINCT CountryCode) >= 2
 """, 13),
 
-        # Question 14: Num of the citizens in Israel and how much it is from the continent
+        # Question 14:  Spoken languages in exactly 2 countries
         ("""
-SELECT 
-    Population,
-    (Population * 100.0 / TotalPopulation) AS Percentage
-FROM Country
-JOIN 
-    (SELECT SUM(Population) AS TotalPopulation 
-	FROM Country 
-	WHERE Continent = 'Asia')
-WHERE Name = 'Israel'
+SELECT Language
+FROM CountryLanguage
+GROUP BY Language
+HAVING COUNT(DISTINCT CountryCode) = 2
 """, 14),
 
-        # Question 15: The cities in countries that indep before BC
-        #              ordered by country name, region, city name
+        # Question 15: Alphabite counter lang
         ("""
-SELECT city.Name
+SELECT SUBSTRING(Name, 1, 1) AS Letter, COUNT(*) AS Counter
 FROM City
-JOIN Country 
-ON city.CountryCode = Code 
-WHERE IndepYear < 0
-ORDER BY Country.Name, Region, city.Name
+GROUP BY Letter
+ORDER BY Letter
 """, 15),
 
-        # Question 16: All the spoken languages in Europe
+        # Question 16: countries that all the lang start in the same letter
         ("""
-SELECT DISTINCT Language
-FROM CountryLanguage
-JOIN Country 
-ON CountryLanguage.CountryCode = Code 
-WHERE Continent = 'Europe'
+SELECT CountryName
+FROM (
+    SELECT c.Name AS CountryName, SUBSTRING(cl.Language, 1, 1) AS FirstLetter
+    FROM Country c
+    JOIN CountryLanguage cl ON c.Code = cl.CountryCode
+) AS CountryLanguages
+GROUP BY CountryName
+HAVING COUNT(DISTINCT FirstLetter) = 1 AND COUNT(*) > 1;
 """, 16),
 
-        # Question 17: All the spoken lang both in Asia and Europe
+        # Question 17: Country + lang
         ("""
-SELECT DISTINCT Language
-FROM CountryLanguage
-WHERE CountryCode IN (
-    SELECT CountryCode
-    FROM CountryLanguage 
-    JOIN Country 
-	ON CountryLanguage.CountryCode = Code
-	AND Continent = 'Europe'
-    WHERE Language IN (
-        SELECT Language
-        FROM CountryLanguage 
-        JOIN Country 
-		ON CountryLanguage.CountryCode = Code 
-		AND Continent = 'Asia')
-    )
+WITH RankedLanguages AS (
+    SELECT 
+        c.Name AS CountryName, 
+        cl.Language,
+        ROW_NUMBER() OVER (PARTITION BY c.Name ORDER BY cl.Language) AS LanguageRank
+    FROM Country c
+    JOIN CountryLanguage cl ON c.Code = cl.CountryCode
+)
+SELECT CountryName, Language
+FROM RankedLanguages
+WHERE LanguageRank = 1;
+
 """, 17),
 
-        # Question 18a: All the spoken lang both Antarctica and Oceania
+        # Question 18: All the official lang
         ("""
-SELECT DISTINCT Language
-FROM CountryLanguage 
-JOIN Country ON CountryLanguage.CountryCode = Code
-WHERE Continent = 'Antarctica'
+SELECT  c.Name AS CountryName,  cl.Language AS OfficialLanguage
+FROM Country c
+JOIN CountryLanguage cl ON c.Code = cl.CountryCode
+WHERE cl.IsOfficial = '1'
+ORDER BY CountryName, OfficialLanguage;
+""", 18),
 
-UNION
-
-SELECT DISTINCT Language
-FROM CountryLanguage
-JOIN Country ON CountryLanguage.CountryCode =Code
-WHERE Continent = 'Oceania'
-""", 18.1),
-        # Question 18b: All the spoken lang both Antarctica and Oceania [bonus]
+        # Question 19: countries with the most diff lang
         ("""
-SELECT DISTINCT Language
-FROM CountryLanguage
-JOIN Country ON CountryCode = Code
-WHERE Continent = 'Antarctica' OR Continent = 'Oceania'
-""", 18.2),
+WITH CountryLang AS (
+    SELECT c.Code AS CountryCode, cl.Language AS CountryLan
+    FROM Country c
+    JOIN CountryLanguage cl ON c.Code = cl.CountryCode
+)
+SELECT c.Name,  COUNT(*) AS LanguageCount
+FROM Country c
+INNER JOIN CountryLang cl ON c.Code = cl.CountryCode
+GROUP BY c.Name
+ORDER BY LanguageCount DESC
+LIMIT 3;
 
-        # Question 19a: All the languages that not spoken in Europe
+""", 19),
+
+        # Question 20: percentage of its surface area relative to its continent
         ("""
-SELECT DISTINCT Language
-FROM CountryLanguage 
-JOIN Country 
-ON CountryLanguage.CountryCode = Code
-WHERE Continent != 'Europe'
-AND Language NOT IN 
-	(SELECT DISTINCT Language
-    FROM CountryLanguage 
-    JOIN Country 
-	ON CountryLanguage.CountryCode = Code
-    WHERE Continent = 'Europe')
-""", 19.1),
-        # Question 19b: All the languages that not spoken in Europe [bonus]
-        ("""
-SELECT DISTINCT Language
-FROM CountryLanguage 
-JOIN Country 
-ON CountryCode = Code
-WHERE Continent != 'Europe'
-
-EXCEPT
-
-SELECT DISTINCT Language
-FROM CountryLanguage 
-JOIN Country 
-ON CountryCode = Code
-WHERE Continent = 'Europe';
-""", 19.2),
-
-        # Question 20: Capitals
-        ("""
-SELECT Country.Name AS Country, City.Name AS Capital
-FROM Country
-JOIN City
-ON Country.Capital = City.ID
+WITH ContinentSurfaceArea AS (
+	SELECT Continent, SUM(SurfaceArea) AS TotalSurfaceArea
+	FROM  Country
+	GROUP BY  Continent
+)
+SELECT  c.Name AS CountryName, (c.SurfaceArea / cs.TotalSurfaceArea) * 100 AS SurfaceAreaPercentage
+FROM Country c
+JOIN ContinentSurfaceArea cs ON c.Continent = cs.Continent;
 """, 20),
 
-        # Question 21: cities with population > 10% of the country
+        # Question 21: The avg of lang in each country
         ("""
-SELECT City.Name AS CityName, City.Population, Country.Name AS CountryName, Country.Population
-FROM City
-JOIN Country 
-ON City.CountryCode = Code
-WHERE City.Population > (0.1 * Country.Population);       
+WITH LanguageCount AS (
+    SELECT CountryCode, COUNT(Language) AS NumLanguages
+    FROM CountryLanguage
+    GROUP BY CountryCode
+)
+SELECT c.Name AS CountryName, AVG(lc.NumLanguages) AS AvgNumLanguages
+FROM Country c
+LEFT JOIN LanguageCount lc ON c.Code = lc.CountryCode
+GROUP BY c.Name;   
 """, 21),
 
-        # Question 22: the fourth country by area
+        # Question 22
         ("""
-SELECT Name, SurfaceArea
-FROM Country
-ORDER BY SurfaceArea DESC
-LIMIT 1 OFFSET 3
+SELECT
+    -- 1. Count of countries that got independent after 1950
+    (
+	SELECT COUNT(*) 
+	FROM Country 
+	WHERE IndepYear > 1950
+	) AS After1950,
+    
+    -- 2. Average life expectancy in Africa
+    (
+	SELECT AVG(LifeExpectancy) 
+	FROM Country 
+	WHERE Continent = 'Africa') 
+	AS AvgLifeExpectancyInAfrica,
+    
+    -- 3. Difference between the max and min population of countries in Europe
+    (SELECT MAX(Population) - MIN(Population) 
+	FROM Country 
+	WHERE Continent = 'Europe') 
+	AS PopulationDifferenceInEurope;
 """, 22),
 
-        # Question 23: LifeExpectancy [Ranges]
+        # Question 23: city detaials
         ("""
-SELECT Name AS CountryName, LifeExpectancy,
-    CASE 
-        WHEN LifeExpectancy <= 40 THEN 'LOW'
-        WHEN LifeExpectancy <= 70 THEN 'MED'
-        WHEN LifeExpectancy <= 100 THEN 'HIGH'
-    END AS LifeExpectancyRange
-FROM  Country       
-""", 23)
+SELECT ci.Name AS CityName, co.Name AS CountryName,
+		(SELECT GROUP_CONCAT(cl.Language, ' - ')
+		 FROM CountryLanguage cl
+		 WHERE ci.CountryCode = cl.CountryCode
+		 GROUP BY cl.CountryCode) AS Languages
+FROM City ci
+INNER JOIN Country co ON ci.CountryCode = co.Code
+WHERE ci.Population > 500000;
+
+""", 23),
+
+        # Question 24: country lang pairs
+        ("""
+WITH CountryLanguages AS (
+  SELECT c.Code AS country_code ,  cl.Language AS language_name
+  FROM Country c
+  JOIN CountryLanguage cl ON c.Code = cl.CountryCode
+)
+SELECT DISTINCT 
+		CASE WHEN cl1.country_code < cl2.country_code 
+					THEN cl1.country_code || ' ' || cl2.country_code
+		 ELSE cl2.country_code || ' ' || cl1.country_code 
+		 END AS CountryPairs
+FROM CountryLanguages cl1
+INNER JOIN CountryLanguages cl2 
+		ON cl1.country_code != cl2.country_code
+		AND cl1.language_name = cl2.language_name
+GROUP BY CountryPairs
+HAVING COUNT(DISTINCT cl1.language_name) >= 2;
+""", 24),
+
+        ("""
+SELECT c.Name AS Country,
+				  c.GNP AS GNP_orig,
+				  v.v,
+				  v.v * c.GNP AS GNP_new
+FROM Country c
+CROSS JOIN
+		(SELECT 3 AS v UNION ALL
+		 SELECT 11 UNION ALL
+		 SELECT 20) 
+		 AS v
+ORDER BY Country
+""", 25),
+
+        ("""
+WITH LanguagePercentage AS (
+    SELECT 
+        cl.CountryCode,
+        cl.Language,
+        cl.Percentage,
+        SUM(cl.Percentage) OVER (PARTITION BY cl.CountryCode ORDER BY cl.Percentage) AS percent_agg_sum
+    FROM 
+        CountryLanguage cl
+)
+SELECT 
+    CountryCode,
+    Language,
+    Percentage,
+    percent_agg_sum
+FROM 
+    LanguagePercentage
+ORDER BY 
+    CountryCode, Percentage;
+        
+""", 26),
+
+        ("""
+WITH RankedLanguages AS (
+    SELECT 
+        cl.CountryCode,
+        cl.Language,
+        cl.Percentage,
+        ROW_NUMBER() OVER (PARTITION BY cl.CountryCode ORDER BY cl.Percentage DESC) AS LanguageRank
+    FROM 
+        CountryLanguage cl
+)
+SELECT  CountryCode, Language, Percentage
+FROM  RankedLanguages
+WHERE  LanguageRank = 1;        
+""", 27)
     ]
 
     # Execute each query and write results to the output file
