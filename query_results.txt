@@ -1,0 +1,659 @@
+=======================================================
+Question: 1
+The query:
+
+SELECT * 
+FROM City
+
+Num of rows: 4079
+The results:
+      ID  Name            CountryCode    District         Population
+ 0     1  Kabul           AFG            Kabol               1780000
+ 1     2  Qandahar        AFG            Qandahar             237500
+ 2     3  Herat           AFG            Herat                186800
+ 3     4  Mazar-e-Sharif  AFG            Balkh                127800
+ 4     5  Amsterdam       NLD            Noord-Holland        731200
+        ID  Name        CountryCode    District      Population
+4074  4075  Khan Yunis  PSE            Khan Yunis        123175
+4075  4076  Hebron      PSE            Hebron            119401
+4076  4077  Jabaliya    PSE            North Gaza        113901
+4077  4078  Nablus      PSE            Nablus            100231
+4078  4079  Rafah       PSE            Rafah              92020
+
+=======================================================
+Question: 2
+The query:
+
+SELECT * 
+FROM Country
+
+Num of rows: 239
+The results:
+    Code    Name                  Continent      Region                          SurfaceArea    IndepYear    Population    LifeExpectancy     GNP    GNPOld  LocalName              GovernmentForm                                HeadOfState             Capital  Code2
+ 0  AFG     Afghanistan           Asia           Southern and Central Asia  652090                   1919      22720000              45.9    5976            Afganistan/Afqanestan  Islamic Emirate                               Mohammad Omar                 1  AF
+ 1  NLD     Netherlands           Europe         Western Europe              41526                   1581      15864000              78.3  371362    360478  Nederland              Constitutional Monarchy                       Beatrix                       5  NL
+ 2  ANT     Netherlands Antilles  North America  Caribbean                     800                               217000              74.7    1941            Nederlandse Antillen   Nonmetropolitan Territory of The Netherlands  Beatrix                      33  AN
+ 3  ALB     Albania               Europe         Southern Europe             28748                   1912       3401200              71.6    3205      2500  Shqipëria              Republic                                      Rexhep Mejdani               34  AL
+ 4  DZA     Algeria               Africa         Northern Africa                 2.38174e+06         1962      31471000              69.7   49982     46966  Al-Jaza’ir/Algérie     Republic                                      Abdelaziz Bouteflika         35  DZ
+     Code    Name                                          Continent    Region                  SurfaceArea  IndepYear      Population  LifeExpectancy      GNP  GNPOld    LocalName                                     GovernmentForm                       HeadOfState     Capital    Code2
+234  IOT     British Indian Ocean Territory                Africa       Eastern Africa                   78                          0                        0            British Indian Ocean Territory                Dependent Territory of the UK        Elisabeth II               IO
+235  SGS     South Georgia and the South Sandwich Islands  Antarctica   Antarctica                     3903                          0                        0            South Georgia and the South Sandwich Islands  Dependent Territory of the UK        Elisabeth II               GS
+236  HMD     Heard Island and McDonald Islands             Antarctica   Antarctica                      359                          0                        0            Heard and McDonald Islands                    Territory of Australia               Elisabeth II               HM
+237  ATF     French Southern territories                   Antarctica   Antarctica                     7780                          0                        0            Terres australes françaises                   Nonmetropolitan Territory of France  Jacques Chirac             TF
+238  UMI     United States Minor Outlying Islands          Oceania      Micronesia/Caribbean             16                          0                        0            United States Minor Outlying Islands          Dependent Territory of the US        George W. Bush             UM
+
+=======================================================
+Question: 3
+The query:
+
+SELECT * 
+FROM City
+WHERE CountryCode = "NLD"
+
+Num of rows: 28
+The results:
+      ID  Name       CountryCode    District         Population
+ 0     5  Amsterdam  NLD            Noord-Holland        731200
+ 1     6  Rotterdam  NLD            Zuid-Holland         593321
+ 2     7  Haag       NLD            Zuid-Holland         440900
+ 3     8  Utrecht    NLD            Utrecht              234323
+ 4     9  Eindhoven  NLD            Noord-Brabant        201843
+      ID  Name     CountryCode    District         Population
+23    28  Zwolle   NLD            Overijssel           105819
+24    29  Ede      NLD            Gelderland           101574
+25    30  Delft    NLD            Zuid-Holland          95268
+26    31  Heerlen  NLD            Limburg               95052
+27    32  Alkmaar  NLD            Noord-Holland         92713
+
+=======================================================
+Question: 4
+The query:
+
+SELECT * 
+FROM Country
+WHERE Code  IN ('LBR', 'IOT', 'TKL')
+
+Num of rows: 3
+The results:
+    Code    Name                            Continent    Region            SurfaceArea    IndepYear    Population    LifeExpectancy    GNP  GNPOld    LocalName                       GovernmentForm                            HeadOfState       Capital  Code2
+ 0  IOT     British Indian Ocean Territory  Africa       Eastern Africa             78                          0                        0            British Indian Ocean Territory  Dependent Territory of the UK             Elisabeth II               IO
+ 1  LBR     Liberia                         Africa       Western Africa         111369         1847       3154000                51   2012            Liberia                         Republic                                  Charles Taylor       2440  LR
+ 2  TKL     Tokelau                         Oceania      Polynesia                  12                       2000                        0            Tokelau                         Nonmetropolitan Territory of New Zealand  Elisabeth II         3333  TK
+
+=======================================================
+Question: 5
+The query:
+
+SELECT * 
+FROM City
+WHERE Population > 4000000
+
+Num of rows: 33
+The results:
+      ID  Name               CountryCode    District          Population
+ 0   206  São Paulo          BRA            São Paulo            9968485
+ 1   207  Rio de Janeiro     BRA            Rio de Janeiro       5598953
+ 2   456  London             GBR            England              7285000
+ 3   554  Santiago de Chile  CHL            Santiago             4703954
+ 4   608  Cairo              EGY            Kairo                6789479
+      ID  Name           CountryCode    District         Population
+28  3320  Bangkok        THA            Bangkok             6320174
+29  3357  Istanbul       TUR            Istanbul            8787958
+30  3580  Moscow         RUS            Moscow (City)       8389200
+31  3581  St Petersburg  RUS            Pietari             4694000
+32  3793  New York       USA            New York            8008278
+
+=======================================================
+Question: 6
+The query:
+
+SELECT * 
+FROM City
+WHERE Population > 3000000 AND CountryCode = 'BRA'
+
+Num of rows: 2
+The results:
+      ID  Name            CountryCode    District          Population
+ 0   206  São Paulo       BRA            São Paulo            9968485
+ 1   207  Rio de Janeiro  BRA            Rio de Janeiro       5598953
+
+=======================================================
+Question: 7
+The query:
+
+SELECT * 
+FROM City
+WHERE Population BETWEEN 150000 AND 170000
+
+Num of rows: 250
+The results:
+      ID  Name            CountryCode    District          Population
+ 0    12  Breda           NLD            Noord-Brabant         160398
+ 1    13  Apeldoorn       NLD            Gelderland            153491
+ 2    14  Nijmegen        NLD            Gelderland            152463
+ 3    41  Sidi Bel Abbès  DZA            Sidi Bel Abbès        153106
+ 4    57  Huambo          AGO            Huambo                163100
+       ID  Name           CountryCode    District      Population
+245  3926  Santa Clarita  USA            California        151088
+246  3927  Salinas        USA            California        151060
+247  3928  Tallahassee    USA            Florida           150624
+248  3929  Rockford       USA            Illinois          150115
+249  4071  Mount Darwin   ZWE            Harare            164362
+
+=======================================================
+Question: 8
+The query:
+
+SELECT * 
+FROM Country
+WHERE IndepYear IN (1970, 1980, 1990)
+
+Num of rows: 7
+The results:
+    Code    Name                             Continent    Region             SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName               GovernmentForm    HeadOfState            Capital  Code2
+ 0  FJI     Fiji Islands                     Oceania      Melanesia                18274         1970        817000              67.9   1536      2149  Fiji Islands            Republic          Josefa Iloilo              764  FJ
+ 1  MHL     Marshall Islands                 Oceania      Micronesia                 181         1990         64000              65.5     97            Marshall Islands/Majol  Republic          Kessai Note               2507  MH
+ 2  FSM     Micronesia, Federated States of  Oceania      Micronesia                 702         1990        119000              68.6    212            Micronesia              Federal Republic  Leo A. Falcam             2689  FM
+ 3  NAM     Namibia                          Africa       Southern Africa         824292         1990       1726000              42.5   3101      3384  Namibia                 Republic          Sam Nujoma                2726  NA
+ 4  TON     Tonga                            Oceania      Polynesia                  650         1970         99000              67.9    146       170  Tonga                   Monarchy          Taufa'ahau Tupou IV       3334  TO
+    Code    Name                             Continent    Region             SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName    GovernmentForm    HeadOfState            Capital  Code2
+ 2  FSM     Micronesia, Federated States of  Oceania      Micronesia                 702         1990        119000              68.6    212            Micronesia   Federal Republic  Leo A. Falcam             2689  FM
+ 3  NAM     Namibia                          Africa       Southern Africa         824292         1990       1726000              42.5   3101      3384  Namibia      Republic          Sam Nujoma                2726  NA
+ 4  TON     Tonga                            Oceania      Polynesia                  650         1970         99000              67.9    146       170  Tonga        Monarchy          Taufa'ahau Tupou IV       3334  TO
+ 5  VUT     Vanuatu                          Oceania      Melanesia                12189         1980        190000              60.6    261       246  Vanuatu      Republic          John Bani                 3537  VU
+ 6  ZWE     Zimbabwe                         Africa       Eastern Africa          390757         1980      11669000              37.8   5951      8670  Zimbabwe     Republic          Robert G. Mugabe          4068  ZW
+
+=======================================================
+Question: 9
+The query:
+
+SELECT * 
+FROM Country
+WHERE IndepYear  = 1980 AND IndepYear = 1990
+
+Num of rows: 0
+The results:
+
+=======================================================
+Question: 10
+The query:
+
+SELECT *
+FROM Country
+WHERE IndepYear BETWEEN 1980 AND 1990
+
+Num of rows: 9
+The results:
+    Code    Name                             Continent      Region             SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName               GovernmentForm           HeadOfState               Capital  Code2
+ 0  ATG     Antigua and Barbuda              North America  Caribbean                  442         1981         68000              70.5    612       584  Antigua and Barbuda     Constitutional Monarchy  Elisabeth II                   63  AG
+ 1  BLZ     Belize                           North America  Central America          22696         1981        241000              70.9    630       616  Belize                  Constitutional Monarchy  Elisabeth II                  185  BZ
+ 2  BRN     Brunei                           Asia           Southeast Asia            5765         1984        328000              73.6  11705     12460  Brunei Darussalam       Monarchy (Sultanate)     Haji Hassan al-Bolkiah        538  BN
+ 3  MHL     Marshall Islands                 Oceania        Micronesia                 181         1990         64000              65.5     97            Marshall Islands/Majol  Republic                 Kessai Note                  2507  MH
+ 4  FSM     Micronesia, Federated States of  Oceania        Micronesia                 702         1990        119000              68.6    212            Micronesia              Federal Republic         Leo A. Falcam                2689  FM
+    Code    Name                             Continent      Region             SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName              GovernmentForm           HeadOfState         Capital  Code2
+ 4  FSM     Micronesia, Federated States of  Oceania        Micronesia                 702         1990        119000              68.6    212            Micronesia             Federal Republic         Leo A. Falcam          2689  FM
+ 5  NAM     Namibia                          Africa         Southern Africa         824292         1990       1726000              42.5   3101      3384  Namibia                Republic                 Sam Nujoma             2726  NA
+ 6  KNA     Saint Kitts and Nevis            North America  Caribbean                  261         1983         38000              70.7    299            Saint Kitts and Nevis  Constitutional Monarchy  Elisabeth II           3064  KN
+ 7  VUT     Vanuatu                          Oceania        Melanesia                12189         1980        190000              60.6    261       246  Vanuatu                Republic                 John Bani              3537  VU
+ 8  ZWE     Zimbabwe                         Africa         Eastern Africa          390757         1980      11669000              37.8   5951      8670  Zimbabwe               Republic                 Robert G. Mugabe       4068  ZW
+
+=======================================================
+Question: 11
+The query:
+
+SELECT *
+FROM Country
+WHERE Continent = 'Africa' AND IndepYear = 1964
+
+Num of rows: 2
+The results:
+    Code    Name    Continent    Region            SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName    GovernmentForm    HeadOfState          Capital  Code2
+ 0  MWI     Malawi  Africa       Eastern Africa         118484         1964      10925000              37.6   1687      2527  Malawi       Republic          Bakili Muluzi           2462  MW
+ 1  ZMB     Zambia  Africa       Eastern Africa         752618         1964       9169000              37.2   3377      3922  Zambia       Republic          Frederick Chiluba       3162  ZM
+
+=======================================================
+Question: 12
+The query:
+
+SELECT *
+FROM Country
+WHERE Continent = 'Africa' OR IndepYear = 1964
+
+Num of rows: 59
+The results:
+    Code    Name          Continent    Region                SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName           GovernmentForm    HeadOfState                Capital  Code2
+ 0  DZA     Algeria       Africa       Northern Africa       2.38174e+06         1962      31471000              69.7  49982     46966  Al-Jaza’ir/Algérie  Republic          Abdelaziz Bouteflika            35  DZ
+ 1  AGO     Angola        Africa       Central Africa        1.2467e+06          1975      12878000              38.3   6648      7984  Angola              Republic          José Eduardo dos Santos         56  AO
+ 2  BEN     Benin         Africa       Western Africa   112622                   1960       6097000              50.2   2357      2141  Bénin               Republic          Mathieu Kérékou                187  BJ
+ 3  BWA     Botswana      Africa       Southern Africa  581730                   1966       1622000              39.3   4834      4935  Botswana            Republic          Festus G. Mogae                204  BW
+ 4  BFA     Burkina Faso  Africa       Western Africa   274000                   1960      11937000              46.7   2425      2201  Burkina Faso        Republic          Blaise Compaoré                549  BF
+    Code    Name                            Continent    Region              SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName                       GovernmentForm                 HeadOfState                Capital  Code2
+54  TCD     Chad                            Africa       Central Africa        1.284e+06         1960       7651000              50.5   1208      1102  Tchad/Tshad                     Republic                       Idriss Déby                   3337  TD
+55  TUN     Tunisia                         Africa       Northern Africa  163610                 1956       9586000              73.7  20026     18898  Tunis/Tunisie                   Republic                       Zine al-Abidine Ben Ali       3349  TN
+56  UGA     Uganda                          Africa       Eastern Africa   241038                 1962      21778000              42.9   6313      6887  Uganda                          Republic                       Yoweri Museveni               3425  UG
+57  ZWE     Zimbabwe                        Africa       Eastern Africa   390757                 1980      11669000              37.8   5951      8670  Zimbabwe                        Republic                       Robert G. Mugabe              4068  ZW
+58  IOT     British Indian Ocean Territory  Africa       Eastern Africa       78                                  0                        0            British Indian Ocean Territory  Dependent Territory of the UK  Elisabeth II                        IO
+
+=======================================================
+Question: 13
+The query:
+
+SELECT *
+FROM Country
+WHERE Continent = 'Asia'
+
+Num of rows: 51
+The results:
+    Code    Name                  Continent    Region                       SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName                           GovernmentForm      HeadOfState                    Capital  Code2
+ 0  AFG     Afghanistan           Asia         Southern and Central Asia         652090         1919      22720000              45.9   5976            Afganistan/Afqanestan               Islamic Emirate     Mohammad Omar                        1  AF
+ 1  ARE     United Arab Emirates  Asia         Middle East                        83600         1971       2441000              74.1  37966     36846  Al-Imarat al-´Arabiya al-Muttahida  Emirate Federation  Zayid bin Sultan al-Nahayan         65  AE
+ 2  ARM     Armenia               Asia         Middle East                        29800         1991       3520000              66.4   1813      1627  Hajastan                            Republic            Robert Kotšarjan                   126  AM
+ 3  AZE     Azerbaijan            Asia         Middle East                        86600         1991       7734000              62.9   4127      4100  Azärbaycan                          Federal Republic    Heydär Äliyev                      144  AZ
+ 4  BHR     Bahrain               Asia         Middle East                          694         1971        617000              73     6366      6097  Al-Bahrayn                          Monarchy (Emirate)  Hamad ibn Isa al-Khalifa           149  BH
+    Code    Name          Continent    Region                       SurfaceArea    IndepYear    Population    LifeExpectancy     GNP    GNPOld  LocalName     GovernmentForm        HeadOfState              Capital  Code2
+46  TUR     Turkey        Asia         Middle East                       774815         1923      66591000              71    210721    189122  Türkiye       Republic              Ahmet Necdet Sezer          3358  TR
+47  TKM     Turkmenistan  Asia         Southern and Central Asia         488100         1991       4459000              60.9    4397      2000  Türkmenostan  Republic              Saparmurad Nijazov          3419  TM
+48  UZB     Uzbekistan    Asia         Southern and Central Asia         447400         1991      24318000              63.7   14194     21300  Uzbekiston    Republic              Islam Karimov               3503  UZ
+49  VNM     Vietnam       Asia         Southeast Asia                    331689         1945      79832000              69.3   21929     22834  Viêt Nam      Socialistic Republic  Trân Duc Luong              3770  VN
+50  PSE     Palestine     Asia         Middle East                         6257                    3101000              71.4    4173            Filastin      Autonomous Area       Yasser (Yasir) Arafat       4074  PS
+
+=======================================================
+Question: 14
+The query:
+
+SELECT *
+FROM Country
+WHERE Continent != 'Asia'
+
+Num of rows: 188
+The results:
+    Code    Name                  Continent      Region               SurfaceArea    IndepYear    Population    LifeExpectancy     GNP    GNPOld  LocalName             GovernmentForm                                HeadOfState             Capital  Code2
+ 0  NLD     Netherlands           Europe         Western Europe   41526                   1581      15864000              78.3  371362    360478  Nederland             Constitutional Monarchy                       Beatrix                       5  NL
+ 1  ANT     Netherlands Antilles  North America  Caribbean          800                               217000              74.7    1941            Nederlandse Antillen  Nonmetropolitan Territory of The Netherlands  Beatrix                      33  AN
+ 2  ALB     Albania               Europe         Southern Europe  28748                   1912       3401200              71.6    3205      2500  Shqipëria             Republic                                      Rexhep Mejdani               34  AL
+ 3  DZA     Algeria               Africa         Northern Africa      2.38174e+06         1962      31471000              69.7   49982     46966  Al-Jaza’ir/Algérie    Republic                                      Abdelaziz Bouteflika         35  DZ
+ 4  ASM     American Samoa        Oceania        Polynesia          199                                68000              75.1     334            Amerika Samoa         US Territory                                  George W. Bush               54  AS
+     Code    Name                                          Continent    Region                  SurfaceArea  IndepYear      Population  LifeExpectancy      GNP  GNPOld    LocalName                                     GovernmentForm                       HeadOfState     Capital    Code2
+183  IOT     British Indian Ocean Territory                Africa       Eastern Africa                   78                          0                        0            British Indian Ocean Territory                Dependent Territory of the UK        Elisabeth II               IO
+184  SGS     South Georgia and the South Sandwich Islands  Antarctica   Antarctica                     3903                          0                        0            South Georgia and the South Sandwich Islands  Dependent Territory of the UK        Elisabeth II               GS
+185  HMD     Heard Island and McDonald Islands             Antarctica   Antarctica                      359                          0                        0            Heard and McDonald Islands                    Territory of Australia               Elisabeth II               HM
+186  ATF     French Southern territories                   Antarctica   Antarctica                     7780                          0                        0            Terres australes françaises                   Nonmetropolitan Territory of France  Jacques Chirac             TF
+187  UMI     United States Minor Outlying Islands          Oceania      Micronesia/Caribbean             16                          0                        0            United States Minor Outlying Islands          Dependent Territory of the US        George W. Bush             UM
+
+=======================================================
+Question: 15
+The query:
+
+SELECT *
+FROM Country
+WHERE Continent NOT IN ('Asia', 'Europe')
+
+Num of rows: 142
+The results:
+    Code    Name                  Continent      Region             SurfaceArea    IndepYear    Population    LifeExpectancy      GNP    GNPOld  LocalName             GovernmentForm                                HeadOfState                Capital  Code2
+ 0  ANT     Netherlands Antilles  North America  Caribbean        800                               217000              74.7   1941              Nederlandse Antillen  Nonmetropolitan Territory of The Netherlands  Beatrix                         33  AN
+ 1  DZA     Algeria               Africa         Northern Africa    2.38174e+06         1962      31471000              69.7  49982       46966  Al-Jaza’ir/Algérie    Republic                                      Abdelaziz Bouteflika            35  DZ
+ 2  ASM     American Samoa        Oceania        Polynesia        199                                68000              75.1    334              Amerika Samoa         US Territory                                  George W. Bush                  54  AS
+ 3  AGO     Angola                Africa         Central Africa     1.2467e+06          1975      12878000              38.3   6648        7984  Angola                Republic                                      José Eduardo dos Santos         56  AO
+ 4  AIA     Anguilla              North America  Caribbean         96                                 8000              76.1     63.2            Anguilla              Dependent Territory of the UK                 Elisabeth II                    62  AI
+     Code    Name                                          Continent    Region                  SurfaceArea  IndepYear      Population  LifeExpectancy      GNP  GNPOld    LocalName                                     GovernmentForm                       HeadOfState     Capital    Code2
+137  IOT     British Indian Ocean Territory                Africa       Eastern Africa                   78                          0                        0            British Indian Ocean Territory                Dependent Territory of the UK        Elisabeth II               IO
+138  SGS     South Georgia and the South Sandwich Islands  Antarctica   Antarctica                     3903                          0                        0            South Georgia and the South Sandwich Islands  Dependent Territory of the UK        Elisabeth II               GS
+139  HMD     Heard Island and McDonald Islands             Antarctica   Antarctica                      359                          0                        0            Heard and McDonald Islands                    Territory of Australia               Elisabeth II               HM
+140  ATF     French Southern territories                   Antarctica   Antarctica                     7780                          0                        0            Terres australes françaises                   Nonmetropolitan Territory of France  Jacques Chirac             TF
+141  UMI     United States Minor Outlying Islands          Oceania      Micronesia/Caribbean             16                          0                        0            United States Minor Outlying Islands          Dependent Territory of the US        George W. Bush             UM
+
+=======================================================
+Question: 16
+The query:
+
+SELECT *
+FROM City
+WHERE Name LIKE 'H%'
+
+Num of rows: 159
+The results:
+      ID  Name            CountryCode    District         Population
+ 0     3  Herat           AFG            Herat                186800
+ 1     7  Haag            NLD            Zuid-Holland         440900
+ 2    16  Haarlem         NLD            Noord-Holland        148772
+ 3    25  Haarlemmermeer  NLD            Noord-Holland        110722
+ 4    31  Heerlen         NLD            Limburg               95052
+       ID  Name       CountryCode    District       Population
+154  3944  Hayward    USA            California         140030
+155  3947  Hollywood  USA            Florida            139357
+156  3975  Hartford   USA            Connecticut        121578
+157  4068  Harare     ZWE            Harare            1410000
+158  4076  Hebron     PSE            Hebron             119401
+
+=======================================================
+Question: 17
+The query:
+
+SELECT *
+FROM City
+WHERE Name NOT LIKE '%e%'
+
+Num of rows: 2517
+The results:
+      ID  Name      CountryCode    District         Population
+ 0     1  Kabul     AFG            Kabol               1780000
+ 1     2  Qandahar  AFG            Qandahar             237500
+ 2     7  Haag      NLD            Zuid-Holland         440900
+ 3    10  Tilburg   NLD            Noord-Brabant        193238
+ 4    19  Zaanstad  NLD            Noord-Holland        135621
+        ID  Name        CountryCode    District      Population
+2512  4074  Gaza        PSE            Gaza              353632
+2513  4075  Khan Yunis  PSE            Khan Yunis        123175
+2514  4077  Jabaliya    PSE            North Gaza        113901
+2515  4078  Nablus      PSE            Nablus            100231
+2516  4079  Rafah       PSE            Rafah              92020
+
+=======================================================
+Question: 18
+The query:
+
+SELECT DISTINCT  Language
+FROM CountryLanguage
+ORDER BY Language
+
+Num of rows: 459
+The results:
+    Language
+ 0  Abhyasi
+ 1  Acholi
+ 2  Adja
+ 3  Afar
+ 4  Afrikaans
+     Language
+454  Zapotec
+455  Zenaga
+456  Zhuang
+457  Zulu
+458  [South]Mande
+
+=======================================================
+Question: 19
+The query:
+
+SELECT *
+FROM Country
+ORDER BY IndepYear, Name
+
+Num of rows: 239
+The results:
+    Code    Name            Continent      Region           SurfaceArea  IndepYear      Population    LifeExpectancy     GNP    GNPOld  LocalName      GovernmentForm                                HeadOfState       Capital  Code2
+ 0  ASM     American Samoa  Oceania        Polynesia        199                              68000              75.1   334              Amerika Samoa  US Territory                                  George W. Bush         54  AS
+ 1  AIA     Anguilla        North America  Caribbean         96                               8000              76.1    63.2            Anguilla       Dependent Territory of the UK                 Elisabeth II           62  AI
+ 2  ATA     Antarctica      Antarctica     Antarctica         1.312e+07                          0                       0              -              Co-administrated                                                         AQ
+ 3  ABW     Aruba           North America  Caribbean        193                             103000              78.4   828         793  Aruba          Nonmetropolitan Territory of The Netherlands  Beatrix               129  AW
+ 4  BMU     Bermuda         North America  North America     53                              65000              76.9  2328        2190  Bermuda        Dependent Territory of the UK                 Elisabeth II          191  BM
+     Code    Name                    Continent    Region             SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName            GovernmentForm    HeadOfState                         Capital  Code2
+234  BIH     Bosnia and Herzegovina  Europe       Southern Europe          51197         1992       3972000              71.5   2841            Bosna i Hercegovina  Federal Republic  Ante Jelavic                            201  BA
+235  CZE     Czech Republic          Europe       Eastern Europe           78866         1993      10278100              74.5  55017     52037  ¸esko                Republic          Václav Havel                           3339  CZ
+236  ERI     Eritrea                 Africa       Eastern Africa          117600         1993       3850000              55.8    650       755  Ertra                Republic          Isayas Afewerki [Isaias Afwerki]        652  ER
+237  SVK     Slovakia                Europe       Eastern Europe           49012         1993       5398700              73.7  20594     19452  Slovensko            Republic          Rudolf Schuster                        3209  SK
+238  PLW     Palau                   Oceania      Micronesia                 459         1994         19000              68.6    105            Belau/Palau          Republic          Kuniwo Nakamura                        2881  PW
+
+=======================================================
+Question: 20
+The query:
+
+SELECT *
+FROM Country
+ORDER BY LifeExpectancy DESC
+
+Num of rows: 239
+The results:
+    Code    Name        Continent    Region             SurfaceArea    IndepYear    Population    LifeExpectancy              GNP           GNPOld  LocalName                              GovernmentForm                          HeadOfState             Capital  Code2
+ 0  AND     Andorra     Europe       Southern Europe            468         1278         78000              83.5   1630                             Andorra                                Parliamentary Coprincipality                                         55  AD
+ 1  MAC     Macao       Asia         Eastern Asia                18                     473000              81.6   5749             5940            Macau/Aomen                            Special Administrative Region of China  Jiang Zemin                2454  MO
+ 2  SMR     San Marino  Europe       Southern Europe             61          885         27000              81.1    510                             San Marino                             Republic                                                           3171  SM
+ 3  JPN     Japan       Asia         Eastern Asia            377829         -660     126714000              80.7      3.78704e+06      4.19264e+06  Nihon/Nippon                           Constitutional Monarchy                 Akihito                    1532  JP
+ 4  SGP     Singapore   Asia         Southeast Asia             618         1965       3567000              80.1  86503            96318            Singapore/Singapura/Xinjiapo/Singapur  Republic                                Sellapan Rama Nathan       3208  SG
+     Code    Name                                          Continent    Region                  SurfaceArea  IndepYear      Population  LifeExpectancy      GNP  GNPOld    LocalName                                     GovernmentForm                       HeadOfState     Capital    Code2
+234  IOT     British Indian Ocean Territory                Africa       Eastern Africa                   78                          0                        0            British Indian Ocean Territory                Dependent Territory of the UK        Elisabeth II               IO
+235  SGS     South Georgia and the South Sandwich Islands  Antarctica   Antarctica                     3903                          0                        0            South Georgia and the South Sandwich Islands  Dependent Territory of the UK        Elisabeth II               GS
+236  HMD     Heard Island and McDonald Islands             Antarctica   Antarctica                      359                          0                        0            Heard and McDonald Islands                    Territory of Australia               Elisabeth II               HM
+237  ATF     French Southern territories                   Antarctica   Antarctica                     7780                          0                        0            Terres australes françaises                   Nonmetropolitan Territory of France  Jacques Chirac             TF
+238  UMI     United States Minor Outlying Islands          Oceania      Micronesia/Caribbean             16                          0                        0            United States Minor Outlying Islands          Dependent Territory of the US        George W. Bush             UM
+
+=======================================================
+Question: 21
+The query:
+
+SELECT *
+FROM Country
+ORDER BY GNP DESC
+LIMIT 10
+
+Num of rows: 10
+The results:
+    Code    Name            Continent      Region                SurfaceArea    IndepYear    Population    LifeExpectancy          GNP       GNPOld  LocalName       GovernmentForm           HeadOfState       Capital  Code2
+ 0  USA     United States   North America  North America         9.36352e+06         1776     278357000              77.1  8.5107e+06   8.1109e+06   United States   Federal Republic         George W. Bush       3813  US
+ 1  JPN     Japan           Asia           Eastern Asia     377829                   -660     126714000              80.7  3.78704e+06  4.19264e+06  Nihon/Nippon    Constitutional Monarchy  Akihito              1532  JP
+ 2  DEU     Germany         Europe         Western Europe   357022                   1955      82164700              77.4  2.13337e+06  2.10283e+06  Deutschland     Federal Republic         Johannes Rau         3068  DE
+ 3  FRA     France          Europe         Western Europe   551500                    843      59225700              78.8  1.42428e+06  1.39245e+06  France          Republic                 Jacques Chirac       2974  FR
+ 4  GBR     United Kingdom  Europe         British Islands  242900                   1066      59623400              77.7  1.37833e+06  1.29683e+06  United Kingdom  Constitutional Monarchy  Elisabeth II          456  GB
+    Code    Name    Continent      Region                SurfaceArea    IndepYear    Population    LifeExpectancy               GNP            GNPOld  LocalName    GovernmentForm                       HeadOfState                  Capital  Code2
+ 5  ITA     Italy   Europe         Southern Europe  301316                   1861      57680000              79         1.16176e+06       1.14537e+06  Italia       Republic                             Carlo Azeglio Ciampi            1464  IT
+ 6  CHN     China   Asia           Eastern Asia          9.5729e+06         -1523    1277558000              71.4  982268            917719            Zhongquo     People'sRepublic                     Jiang Zemin                     1891  CN
+ 7  BRA     Brazil  South America  South America         8.5474e+06          1822     170115000              62.9  776739            804108            Brasil       Federal Republic                     Fernando Henrique Cardoso        211  BR
+ 8  CAN     Canada  North America  North America         9.97061e+06         1867      31147000              79.4  598862            625626            Canada       Constitutional Monarchy, Federation  Elisabeth II                    1822  CA
+ 9  ESP     Spain   Europe         Southern Europe  505992                   1492      39441700              78.8  553233            532031            España       Constitutional Monarchy              Juan Carlos I                    653  ES
+
+=======================================================
+Question: 22
+The query:
+
+SELECT *
+FROM Country
+ORDER BY GNP DESC
+LIMIT 10,10
+
+Num of rows: 10
+The results:
+    Code    Name         Continent      Region                         SurfaceArea    IndepYear    Population    LifeExpectancy     GNP    GNPOld  LocalName     GovernmentForm                       HeadOfState                 Capital  Code2
+ 0  IND     India        Asia           Southern and Central Asia      3.28726e+06         1947    1013662000              62.5  447114    430572  Bharat/India  Federal Republic                     Kocheril Raman Narayanan       1109  IN
+ 1  MEX     Mexico       North America  Central America                1.9582e+06          1810      98881000              71.5  414972    401461  México        Federal Republic                     Vicente Fox Quesada            2515  MX
+ 2  NLD     Netherlands  Europe         Western Europe             41526                   1581      15864000              78.3  371362    360478  Nederland     Constitutional Monarchy              Beatrix                           5  NL
+ 3  AUS     Australia    Oceania        Australia and New Zealand      7.74122e+06         1901      18886000              79.8  351182    392911  Australia     Constitutional Monarchy, Federation  Elisabeth II                    135  AU
+ 4  ARG     Argentina    South America  South America                  2.7804e+06          1816      37032000              75.1  340238    323310  Argentina     Federal Republic                     Fernando de la Rúa               69  AR
+    Code    Name                Continent    Region              SurfaceArea    IndepYear    Population    LifeExpectancy     GNP    GNPOld  LocalName                       GovernmentForm                       HeadOfState       Capital  Code2
+ 5  KOR     South Korea         Asia         Eastern Asia    99434                   1948      46844000              74.4  320749    442544  Taehan Min’guk (Namhan)         Republic                             Kim Dae-jung         2331  KR
+ 6  RUS     Russian Federation  Europe       Eastern Europe      1.70754e+07         1991     146934000              67.2  276608    442989  Rossija                         Federal Republic                     Vladimir Putin       3580  RU
+ 7  CHE     Switzerland         Europe       Western Europe  41284                   1499       7160400              79.6  264478    256092  Schweiz/Suisse/Svizzera/Svizra  Federation                           Adolf Ogi            3248  CH
+ 8  TWN     Taiwan              Asia         Eastern Asia    36188                   1945      22256000              76.4  256254    263451  T’ai-wan                        Republic                             Chen Shui-bian       3263  TW
+ 9  BEL     Belgium             Europe       Western Europe  30518                   1830      10239000              77.8  249704    243948  België/Belgique                 Constitutional Monarchy, Federation  Albert II             179  BE
+
+=======================================================
+Question: 23
+The query:
+
+SELECT *
+FROM Country
+ORDER BY GNP ASC
+LIMIT 10
+
+Num of rows: 10
+The results:
+    Code    Name                    Continent      Region                SurfaceArea  IndepYear      Population    LifeExpectancy    GNP  GNPOld    LocalName                  GovernmentForm                 HeadOfState              Capital  Code2
+ 0  FLK     Falkland Islands        South America  South America     12173                                 2000                        0            Falkland Islands           Dependent Territory of the UK  Elisabeth II                 763  FK
+ 1  FRO     Faroe Islands           Europe         Nordic Countries   1399                                43000              78.4      0            Føroyar                    Part of Denmark                Margrethe II                 901  FO
+ 2  GRL     Greenland               North America  North America         2.16609e+06                      56000              68.1      0            Kalaallit Nunaat/Grønland  Part of Denmark                Margrethe II                 917  GL
+ 3  SJM     Svalbard and Jan Mayen  Europe         Nordic Countries  62422                                 3200                        0            Svalbard og Jan Mayen      Dependent Territory of Norway  Harald V                     938  SJ
+ 4  TMP     East Timor              Asia           Southeast Asia    14874                               885000              46        0            Timor Timur                Administrated by the UN        José Alexandre Gusmão       1522  TP
+    Code    Name                     Continent    Region                       SurfaceArea  IndepYear      Population    LifeExpectancy    GNP  GNPOld    LocalName                GovernmentForm                            HeadOfState       Capital  Code2
+ 5  CXR     Christmas Island         Oceania      Australia and New Zealand            135                       2500                        0            Christmas Island         Territory of Australia                    Elisabeth II         1791  CX
+ 6  CCK     Cocos (Keeling) Islands  Oceania      Australia and New Zealand             14                        600                        0            Cocos (Keeling) Islands  Territory of Australia                    Elisabeth II         2317  CC
+ 7  MYT     Mayotte                  Africa       Eastern Africa                       373                     149000              59.5      0            Mayotte                  Territorial Collectivity of France        Jacques Chirac       2514  YT
+ 8  NIU     Niue                     Oceania      Polynesia                            260                       2000                        0            Niue                     Nonmetropolitan Territory of New Zealand  Elisabeth II         2805  NU
+ 9  NFK     Norfolk Island           Oceania      Australia and New Zealand             36                       2000                        0            Norfolk Island           Territory of Australia                    Elisabeth II         2806  NF
+
+=======================================================
+Question: 24
+The query:
+
+SELECT Name, Continent || ' (' || Region || ')'
+FROM Country
+ORDER BY 1
+
+Num of rows: 239
+The results:
+    Name            Continent || ' (' || Region || ')'
+ 0  Afghanistan     Asia (Southern and Central Asia)
+ 1  Albania         Europe (Southern Europe)
+ 2  Algeria         Africa (Northern Africa)
+ 3  American Samoa  Oceania (Polynesia)
+ 4  Andorra         Europe (Southern Europe)
+     Name            Continent || ' (' || Region || ')'
+234  Western Sahara  Africa (Northern Africa)
+235  Yemen           Asia (Middle East)
+236  Yugoslavia      Europe (Southern Europe)
+237  Zambia          Africa (Eastern Africa)
+238  Zimbabwe        Africa (Eastern Africa)
+
+=======================================================
+Question: 25
+The query:
+
+SELECT Name, Population / 1000000.0  Population 
+FROM Country
+WHERE Name LIKE 'Z%'
+
+Num of rows: 2
+The results:
+    Name        Population
+ 0  Zambia           9.169
+ 1  Zimbabwe        11.669
+
+=======================================================
+Question: 26
+The query:
+
+SELECT *
+FROM Country
+WHERE GNP > 2 * GNPOld
+
+Num of rows: 2
+The results:
+    Code    Name                                   Continent    Region                          SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName                         GovernmentForm    HeadOfState           Capital  Code2
+ 0  COD     Congo, The Democratic Republic of the  Africa       Central Africa                  2.34486e+06         1960      51654000              48.8   6964      2474  République Démocratique du Congo  Republic          Joseph Kabila            2298  CD
+ 1  TKM     Turkmenistan                           Asia         Southern and Central Asia  488100                   1991       4459000              60.9   4397      2000  Türkmenostan                      Republic          Saparmurad Nijazov       3419  TM
+
+=======================================================
+Question: 27
+The query:
+
+SELECT Name,  Population / SurfaceArea
+FROM Country
+ORDER BY 2 DESC
+
+Num of rows: 239
+The results:
+    Name         Population / SurfaceArea
+ 0  Macao                        26277.8
+ 1  Monaco                       22666.7
+ 2  Hong Kong                     6308.84
+ 3  Singapore                     5771.84
+ 4  Gibraltar                     4166.67
+     Name                                            Population / SurfaceArea
+234  British Indian Ocean Territory                                         0
+235  South Georgia and the South Sandwich Islands                           0
+236  Heard Island and McDonald Islands                                      0
+237  French Southern territories                                            0
+238  United States Minor Outlying Islands                                   0
+
+=======================================================
+Question: 28
+The query:
+
+SELECT Name,  Population / SurfaceArea
+FROM Country
+WHERE Population / SurfaceArea > 2000
+ORDER BY Code DESC
+
+Num of rows: 6
+The results:
+    Name                             Population / SurfaceArea
+ 0  Holy See (Vatican City State)                     2500
+ 1  Singapore                                         5771.84
+ 2  Monaco                                           22666.7
+ 3  Macao                                            26277.8
+ 4  Hong Kong                                         6308.84
+    Name         Population / SurfaceArea
+ 1  Singapore                     5771.84
+ 2  Monaco                       22666.7
+ 3  Macao                        26277.8
+ 4  Hong Kong                     6308.84
+ 5  Gibraltar                     4166.67
+
+=======================================================
+Question: 29
+The query:
+
+SELECT *
+FROM Country
+ORDER BY Continent , SurfaceArea DESC
+
+Num of rows: 239
+The results:
+    Code    Name                                   Continent    Region             SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName                         GovernmentForm     HeadOfState                    Capital  Code2
+ 0  SDN     Sudan                                  Africa       Northern Africa    2.50581e+06         1956      29490000              56.6  10162            As-Sudan                          Islamic Republic   Omar Hassan Ahmad al-Bashir       3225  SD
+ 1  DZA     Algeria                                Africa       Northern Africa    2.38174e+06         1962      31471000              69.7  49982     46966  Al-Jaza’ir/Algérie                Republic           Abdelaziz Bouteflika                35  DZ
+ 2  COD     Congo, The Democratic Republic of the  Africa       Central Africa     2.34486e+06         1960      51654000              48.8   6964      2474  République Démocratique du Congo  Republic           Joseph Kabila                     2298  CD
+ 3  LBY     Libyan Arab Jamahiriya                 Africa       Northern Africa    1.75954e+06         1951       5605000              75.5  44806     40562  Libiya                            Socialistic State  Muammar al-Qadhafi                2441  LY
+ 4  TCD     Chad                                   Africa       Central Africa     1.284e+06           1960       7651000              50.5   1208      1102  Tchad/Tshad                       Republic           Idriss Déby                       3337  TD
+     Code    Name              Continent      Region           SurfaceArea    IndepYear    Population    LifeExpectancy    GNP    GNPOld  LocalName         GovernmentForm                 HeadOfState            Capital  Code2
+234  GUY     Guyana            South America  South America         214969         1966        861000              64      722       743  Guyana            Republic                       Bharrat Jagdeo             928  GY
+235  URY     Uruguay           South America  South America         175016         1828       3337000              75.2  20831     19967  Uruguay           Republic                       Jorge Batlle Ibáñez       3492  UY
+236  SUR     Suriname          South America  South America         163265         1975        417000              71.4    870       706  Suriname          Republic                       Ronald Venetiaan          3243  SR
+237  GUF     French Guiana     South America  South America          90000                     181000              76.1    681            Guyane française  Overseas Department of France  Jacques Chirac            3014  GF
+238  FLK     Falkland Islands  South America  South America          12173                       2000                        0            Falkland Islands  Dependent Territory of the UK  Elisabeth II               763  FK
+
+=======================================================
+Question: 30
+The query:
+
+SELECT *
+FROM Country
+WHERE Name LIKE '%N' AND LENGTH(Name) <= 10;
+
+Num of rows: 23
+The results:
+    Code    Name        Continent    Region                       SurfaceArea    IndepYear    Population    LifeExpectancy     GNP    GNPOld  LocalName    GovernmentForm           HeadOfState                 Capital  Code2
+ 0  AZE     Azerbaijan  Asia         Middle East                        86600         1991       7734000              62.9    4127      4100  Azärbaycan   Federal Republic         Heydär Äliyev                   144  AZ
+ 1  BHR     Bahrain     Asia         Middle East                          694         1971        617000              73      6366      6097  Al-Bahrayn   Monarchy (Emirate)       Hamad ibn Isa al-Khalifa        149  BH
+ 2  BEN     Benin       Africa       Western Africa                    112622         1960       6097000              50.2    2357      2141  Bénin        Republic                 Mathieu Kérékou                 187  BJ
+ 3  BTN     Bhutan      Asia         Southern and Central Asia          47000         1910       2124000              52.4     372       383  Druk-Yul     Monarchy                 Jigme Singye Wangchuk           192  BT
+ 4  ESP     Spain       Europe       Southern Europe                   505992         1492      39441700              78.8  553233    532031  España       Constitutional Monarchy  Juan Carlos I                   653  ES
+    Code    Name        Continent    Region                          SurfaceArea    IndepYear    Population    LifeExpectancy     GNP    GNPOld  LocalName    GovernmentForm           HeadOfState                    Capital  Code2
+18  SWE     Sweden      Europe       Nordic Countries           449964                    836       8861400              79.6  226492    227757  Sverige      Constitutional Monarchy  Carl XVI Gustaf                   3048  SE
+19  SDN     Sudan       Africa       Northern Africa                 2.50581e+06         1956      29490000              56.6   10162            As-Sudan     Islamic Republic         Omar Hassan Ahmad al-Bashir       3225  SD
+20  TJK     Tajikistan  Asia         Southern and Central Asia  143100                   1991       6188000              64.1    1990      1056  Toçikiston   Republic                 Emomali Rahmonov                  3261  TJ
+21  TWN     Taiwan      Asia         Eastern Asia                36188                   1945      22256000              76.4  256254    263451  T’ai-wan     Republic                 Chen Shui-bian                    3263  TW
+22  UZB     Uzbekistan  Asia         Southern and Central Asia  447400                   1991      24318000              63.7   14194     21300  Uzbekiston   Republic                 Islam Karimov                     3503  UZ
+
+=======================================================
+Question: 31
+The query:
+
+SELECT *
+FROM Country
+WHERE IndepYear IS NULL
+
+Num of rows: 47
+The results:
+    Code    Name                  Continent      Region           SurfaceArea  IndepYear      Population    LifeExpectancy     GNP    GNPOld  LocalName             GovernmentForm                                HeadOfState       Capital  Code2
+ 0  ANT     Netherlands Antilles  North America  Caribbean                800                     217000              74.7  1941              Nederlandse Antillen  Nonmetropolitan Territory of The Netherlands  Beatrix                33  AN
+ 1  ASM     American Samoa        Oceania        Polynesia                199                      68000              75.1   334              Amerika Samoa         US Territory                                  George W. Bush         54  AS
+ 2  AIA     Anguilla              North America  Caribbean                 96                       8000              76.1    63.2            Anguilla              Dependent Territory of the UK                 Elisabeth II           62  AI
+ 3  ABW     Aruba                 North America  Caribbean                193                     103000              78.4   828         793  Aruba                 Nonmetropolitan Territory of The Netherlands  Beatrix               129  AW
+ 4  BMU     Bermuda               North America  North America             53                      65000              76.9  2328        2190  Bermuda               Dependent Territory of the UK                 Elisabeth II          191  BM
+    Code    Name                                          Continent    Region                  SurfaceArea  IndepYear      Population  LifeExpectancy      GNP  GNPOld    LocalName                                     GovernmentForm                       HeadOfState     Capital    Code2
+42  IOT     British Indian Ocean Territory                Africa       Eastern Africa                   78                          0                        0            British Indian Ocean Territory                Dependent Territory of the UK        Elisabeth II               IO
+43  SGS     South Georgia and the South Sandwich Islands  Antarctica   Antarctica                     3903                          0                        0            South Georgia and the South Sandwich Islands  Dependent Territory of the UK        Elisabeth II               GS
+44  HMD     Heard Island and McDonald Islands             Antarctica   Antarctica                      359                          0                        0            Heard and McDonald Islands                    Territory of Australia               Elisabeth II               HM
+45  ATF     French Southern territories                   Antarctica   Antarctica                     7780                          0                        0            Terres australes françaises                   Nonmetropolitan Territory of France  Jacques Chirac             TF
+46  UMI     United States Minor Outlying Islands          Oceania      Micronesia/Caribbean             16                          0                        0            United States Minor Outlying Islands          Dependent Territory of the US        George W. Bush             UM
+

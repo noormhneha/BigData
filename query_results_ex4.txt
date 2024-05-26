@@ -1,0 +1,422 @@
+=======================================================
+Question: 1
+The query:
+
+SELECT c.Continent, c.Name, 
+       ROUND( 100.0 * c.SurfaceArea  / (
+			   SELECT SUM(SurfaceArea) 
+			   FROM Country ct 
+			   WHERE ct.Continent = c.Continent ) , 2) 
+       AS PercentOfContinent
+FROM Country c
+WINDOW w 
+AS ( PARTITION BY Continent 
+		  ORDER BY PercentOfContinent DESC )
+ORDER BY Continent, PercentOfContinent DESC;
+
+Num of rows: 239
+The results:
+    Continent    Name                                     PercentOfContinent
+ 0  Africa       Sudan                                                  8.28
+ 1  Africa       Algeria                                                7.87
+ 2  Africa       Congo, The Democratic Republic of the                  7.75
+ 3  Africa       Libyan Arab Jamahiriya                                 5.82
+ 4  Africa       Chad                                                   4.24
+     Continent      Name                PercentOfContinent
+234  South America  Guyana                            1.2
+235  South America  Uruguay                           0.98
+236  South America  Suriname                          0.91
+237  South America  French Guiana                     0.5
+238  South America  Falkland Islands                  0.07
+
+=======================================================
+Question: 2
+The query:
+
+SELECT c.Name, c.CountryCode, c.Population,
+       CASE WHEN c.Population > (SELECT AVG(Population) FROM City WHERE CountryCode = c.CountryCode) 
+            THEN 'Above Average' ELSE 'Below Average' END AS PopulationStatus
+FROM City c
+ORDER BY c.CountryCode, c.Population;
+
+Num of rows: 4079
+The results:
+    Name            CountryCode      Population  PopulationStatus
+ 0  Oranjestad      ABW                   29034  Below Average
+ 1  Mazar-e-Sharif  AFG                  127800  Below Average
+ 2  Herat           AFG                  186800  Below Average
+ 3  Qandahar        AFG                  237500  Below Average
+ 4  Kabul           AFG                 1780000  Above Average
+      Name          CountryCode      Population  PopulationStatus
+4074  Mutare        ZWE                  131367  Below Average
+4075  Mount Darwin  ZWE                  164362  Below Average
+4076  Chitungwiza   ZWE                  274912  Below Average
+4077  Bulawayo      ZWE                  621742  Above Average
+4078  Harare        ZWE                 1410000  Above Average
+
+=======================================================
+Question: 3
+The query:
+
+SELECT ROW_NUMBER() OVER (ORDER BY SurfaceArea DESC) AS RowNum, *
+FROM Country
+ORDER BY RowNum;
+
+Num of rows: 239
+The results:
+      RowNum  Code    Name                Continent      Region            SurfaceArea    IndepYear    Population    LifeExpectancy              GNP           GNPOld  LocalName      GovernmentForm                       HeadOfState       Capital  Code2
+ 0         1  RUS     Russian Federation  Europe         Eastern Europe    1.70754e+07         1991     146934000              67.2  276608           442989           Rossija        Federal Republic                     Vladimir Putin       3580  RU
+ 1         2  ATA     Antarctica          Antarctica     Antarctica        1.312e+07                            0                         0                            -              Co-administrated                                                AQ
+ 2         3  CAN     Canada              North America  North America     9.97061e+06         1867      31147000              79.4  598862           625626           Canada         Constitutional Monarchy, Federation  Elisabeth II         1822  CA
+ 3         4  CHN     China               Asia           Eastern Asia      9.5729e+06         -1523    1277558000              71.4  982268           917719           Zhongquo       People'sRepublic                     Jiang Zemin          1891  CN
+ 4         5  USA     United States       North America  North America     9.36352e+06         1776     278357000              77.1       8.5107e+06       8.1109e+06  United States  Federal Republic                     George W. Bush       3813  US
+       RowNum  Code    Name                           Continent    Region                       SurfaceArea    IndepYear    Population    LifeExpectancy    GNP  GNPOld    LocalName                      GovernmentForm                            HeadOfState            Capital  Code2
+234       235  CCK     Cocos (Keeling) Islands        Oceania      Australia and New Zealand           14                          600                        0            Cocos (Keeling) Islands        Territory of Australia                    Elisabeth II              2317  CC
+235       236  TKL     Tokelau                        Oceania      Polynesia                           12                         2000                        0            Tokelau                        Nonmetropolitan Territory of New Zealand  Elisabeth II              3333  TK
+236       237  GIB     Gibraltar                      Europe       Southern Europe                      6                        25000              79      258            Gibraltar                      Dependent Territory of the UK             Elisabeth II               915  GI
+237       238  MCO     Monaco                         Europe       Western Europe                       1.5         1861         34000              78.8    776            Monaco                         Constitutional Monarchy                   Rainier III               2695  MC
+238       239  VAT     Holy See (Vatican City State)  Europe       Southern Europe                      0.4         1929          1000                        9            Santa Sede/Città del Vaticano  Independent Church State                  Johannes Paavali II       3538  VA
+
+=======================================================
+Question: 4
+The query:
+
+SELECT DENSE_RANK() OVER (ORDER BY IndepYear) AS RowNum, 
+       Name, Code, IndepYear
+FROM Country
+ORDER BY RowNum, Code;
+
+Num of rows: 239
+The results:
+      RowNum  Name                  Code    IndepYear
+ 0         1  Aruba                 ABW
+ 1         1  Anguilla              AIA
+ 2         1  Netherlands Antilles  ANT
+ 3         1  American Samoa        ASM
+ 4         1  Antarctica            ATA
+       RowNum  Name                    Code      IndepYear
+234        87  Bosnia and Herzegovina  BIH            1992
+235        88  Czech Republic          CZE            1993
+236        88  Eritrea                 ERI            1993
+237        88  Slovakia                SVK            1993
+238        89  Palau                   PLW            1994
+
+=======================================================
+Question: 5
+The query:
+
+SELECT c.Name, c.Code, 
+       RANK() OVER (ORDER BY cnt DESC) AS Rank
+FROM Country c
+JOIN (SELECT CountryCode, COUNT(*) AS cnt FROM City GROUP BY CountryCode) t
+   ON c.Code = t.CountryCode  
+ORDER BY Rank DESC;
+
+Num of rows: 232
+The results:
+    Name                  Code      Rank
+ 0  Aruba                 ABW        148
+ 1  Albania               ALB        148
+ 2  Andorra               AND        148
+ 3  Netherlands Antilles  ANT        148
+ 4  Antigua and Barbuda   ATG        148
+     Name           Code      Rank
+227  Japan          JPN          5
+228  Brazil         BRA          4
+229  United States  USA          3
+230  India          IND          2
+231  China          CHN          1
+
+=======================================================
+Question: 6
+The query:
+
+SELECT Name, Population, 
+       SUM(Population) OVER (ORDER BY Population DESC) AS RunningTotal,
+       ROUND(100.0 * SUM(Population) 
+						OVER (ORDER BY Population DESC) / (
+										SELECT SUM(Population) 
+										FROM Country), 2)
+						AS PercentOfWorld  
+FROM Country;
+
+Num of rows: 239
+The results:
+    Name             Population    RunningTotal    PercentOfWorld
+ 0  China            1277558000      1277558000             21.02
+ 1  India            1013662000      2291220000             37.69
+ 2  United States     278357000      2569577000             42.27
+ 3  Indonesia         212107000      2781684000             45.76
+ 4  Brazil            170115000      2951799000             48.56
+     Name                                            Population    RunningTotal    PercentOfWorld
+234  British Indian Ocean Territory                           0      6078749450               100
+235  South Georgia and the South Sandwich Islands             0      6078749450               100
+236  Heard Island and McDonald Islands                        0      6078749450               100
+237  French Southern territories                              0      6078749450               100
+238  United States Minor Outlying Islands                     0      6078749450               100
+
+=======================================================
+Question: 7
+The query:
+
+WITH PopulationRanking AS (
+  SELECT
+    Code AS country_code,
+    Population,
+    SUM(Population) OVER (ORDER BY Population DESC) AS cumulative_population,
+    (SELECT SUM(Population) FROM Country) AS total_population
+  FROM Country
+)
+SELECT
+  COUNT(*) AS min_countries_to_reach_half_population
+FROM PopulationRanking
+WHERE cumulative_population >= (total_population / 2);
+
+Num of rows: 1
+The results:
+      min_countries_to_reach_half_population
+ 0                                       234
+
+=======================================================
+Question: 8
+The query:
+
+WITH ctePopRanked AS (
+  SELECT Name, Population,
+         SUM(Population) OVER (ORDER BY Population DESC) AS RunningTotal  
+  FROM Country
+)
+SELECT Name
+FROM ctePopRanked
+WHERE RunningTotal <= (SELECT SUM(Population) * 0.5 FROM Country)
+ORDER BY RunningTotal DESC;
+
+Num of rows: 5
+The results:
+    Name
+ 0  Brazil
+ 1  Indonesia
+ 2  United States
+ 3  India
+ 4  China
+
+=======================================================
+Question: 9
+The query:
+
+WITH cte AS (
+  SELECT CountryCode, Language, Percentage,
+         RANK() OVER (PARTITION BY CountryCode ORDER BY Percentage DESC) AS LanguageRank
+  FROM CountryLanguage
+)
+SELECT CountryCode, 
+       MAX(CASE WHEN LanguageRank = 1 THEN Language ELSE NULL END) AS TopLanguage,
+       MAX(CASE WHEN LanguageRank = 2 THEN Language ELSE NULL END) AS SecondLanguage
+FROM cte
+GROUP BY CountryCode;
+
+Num of rows: 233
+The results:
+    CountryCode    TopLanguage    SecondLanguage
+ 0  ABW            Papiamento     English
+ 1  AFG            Pashto         Dari
+ 2  AGO            Ovimbundu      Mbundu
+ 3  AIA            English
+ 4  ALB            Albaniana      Greek
+     CountryCode    TopLanguage     SecondLanguage
+228  YEM            Arabic          Soqutri
+229  YUG            Serbo-Croatian  Albaniana
+230  ZAF            Zulu            Xhosa
+231  ZMB            Bemba           Tongan
+232  ZWE            Shona           Ndebele
+
+=======================================================
+Question: 10
+The query:
+
+SELECT c.ID, c.Name, c.CountryCode, c.Population,
+       RANK() OVER (PARTITION BY c.CountryCode ORDER BY c.Population DESC) AS RankInCountry,
+       RANK() OVER (ORDER BY c.Population DESC) AS OverallRank
+FROM City c
+ORDER BY c.ID;
+        
+
+Num of rows: 4079
+The results:
+      ID  Name            CountryCode      Population    RankInCountry    OverallRank
+ 0     1  Kabul           AFG                 1780000                1            108
+ 1     2  Qandahar        AFG                  237500                2           1384
+ 2     3  Herat           AFG                  186800                3           1793
+ 3     4  Mazar-e-Sharif  AFG                  127800                4           2689
+ 4     5  Amsterdam       NLD                  731200                1            337
+        ID  Name        CountryCode      Population    RankInCountry    OverallRank
+4074  4075  Khan Yunis  PSE                  123175                2           2841
+4075  4076  Hebron      PSE                  119401                3           2938
+4076  4077  Jabaliya    PSE                  113901                4           3086
+4077  4078  Nablus      PSE                  100231                5           3546
+4078  4079  Rafah       PSE                   92020                6           3860
+
+=======================================================
+Question: 11
+The query:
+
+SELECT COUNT(*) - 1 AS LifeExpectancyGapsOver1
+FROM (
+  SELECT LifeExpectancy, 
+         LEAD(LifeExpectancy) OVER (ORDER BY LifeExpectancy) AS NextLifeExpectancy
+  FROM Country
+) t
+WHERE ABS(LifeExpectancy - NextLifeExpectancy) > 1;
+
+Num of rows: 1
+The results:
+      LifeExpectancyGapsOver1
+ 0                          7
+
+=======================================================
+Question: 12
+The query:
+
+SELECT c1.Name
+FROM Country c1
+JOIN Country c2 ON c2.IndepYear = c1.IndepYear - 1  
+JOIN Country c3 ON c3.IndepYear = c1.IndepYear - 2
+GROUP BY c1.Name;
+
+Num of rows: 59
+The results:
+    Name
+ 0  Afghanistan
+ 1  Algeria
+ 2  Angola
+ 3  Antigua and Barbuda
+ 4  Barbados
+    Name
+54  Tuvalu
+55  Uganda
+56  Vanuatu
+57  Zambia
+58  Zimbabwe
+
+=======================================================
+Question: 13
+The query:
+
+WITH SortedCountries AS (
+    SELECT name, indepYear, LAG(indepYear) OVER (ORDER BY indepYear, code) AS previous_year
+    FROM country
+    WHERE indepYear > 1800
+),
+Gaps AS (
+    SELECT name, indepYear, previous_year, indepYear - previous_year AS year_gap
+    FROM SortedCountries
+    WHERE indepYear - previous_year > 5
+),
+RankedGaps AS (
+    SELECT name, indepYear, year_gap, ROW_NUMBER() OVER (ORDER BY year_gap DESC) AS gap_rank
+    FROM Gaps
+)
+SELECT name, indepYear, year_gap
+FROM RankedGaps
+WHERE gap_rank >= 7
+ORDER BY  indepYear;
+
+Num of rows: 2
+The results:
+    name                               indepYear    year_gap
+ 0  Holy See (Vatican City State)           1929           6
+ 1  Micronesia, Federated States of         1990           6
+
+=======================================================
+Question: 14.1
+The query:
+
+SELECT 
+    ci.Name AS City, 
+    c.Name AS Country, 
+    COUNT(DISTINCT ci.District) AS NumDistricts
+FROM City ci
+JOIN Country c ON ci.CountryCode = c.Code
+-- Join the City table with the Country table using the country code
+GROUP BY ci.Name, c.Name
+-- Group the results by city name and country name
+ORDER BY NumDistricts DESC;
+-- Order the results by the number of districts in descending order
+
+Num of rows: 4056
+The results:
+    City         Country          NumDistricts
+ 0  Springfield  United States               3
+ 1  Arlington    United States               2
+ 2  Aurora       United States               2
+ 3  Columbus     United States               2
+ 4  Depok        Indonesia                   2
+      City       Country               NumDistricts
+4051  Šahty      Russian Federation               1
+4052  Šiauliai   Lithuania                        1
+4053  Šostka     Ukraine                          1
+4054  Štšolkovo  Russian Federation               1
+4055  Šumen      Bulgaria                         1
+
+=======================================================
+Question: 14.2
+The query:
+
+SELECT 
+    c.Name AS Country, 
+    AVG(ci.Population) AS AvgCityPopulation
+FROM Country c
+JOIN City ci ON c.Code = ci.CountryCode
+-- Join the Country table with the City table on the country code
+GROUP BY c.Name
+-- Group the results by country name
+ORDER BY AvgCityPopulation DESC;
+-- Order the results by the average city population in descending order
+
+Num of rows: 232
+The results:
+    Country      AvgCityPopulation
+ 0  Singapore          4.01773e+06
+ 1  Hong Kong          1.65032e+06
+ 2  Uruguay            1.236e+06
+ 3  Guinea             1.09061e+06
+ 4  Uganda        890800
+     Country                          AvgCityPopulation
+227  Niue                                           682
+228  Holy See (Vatican City State)                  455
+229  Cocos (Keeling) Islands                        335
+230  Tokelau                                        300
+231  Pitcairn                                        42
+
+=======================================================
+Question: 14.3
+The query:
+
+SELECT 
+    c.Name AS Country, 
+    COUNT(DISTINCT ci.District) AS NumDistricts
+FROM Country c
+JOIN City ci ON c.Code = ci.CountryCode
+-- Join the Country table with the City table on the country code
+GROUP BY c.Name
+-- Group the results by country name
+HAVING COUNT(DISTINCT ci.District) > 3
+-- Filter for countries with more than 3 distinct districts
+ORDER BY NumDistricts DESC;
+-- Order the results by the number of districts in descending order
+
+Num of rows: 95
+The results:
+    Country               NumDistricts
+ 0  Russian Federation              77
+ 1  Turkey                          50
+ 2  Japan                           47
+ 3  United States                   45
+ 4  Mexico                          33
+    Country        NumDistricts
+90  Croatia                   4
+91  Benin                     4
+92  Azerbaijan                4
+93  Angola                    4
+94  Afghanistan               4
+
